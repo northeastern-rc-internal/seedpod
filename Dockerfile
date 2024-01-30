@@ -1,0 +1,79 @@
+FROM ubuntu:22.04
+ENV TERM linux
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+#install some base compilers and packages
+
+RUN apt-get update && \
+    apt-get install -y build-essential \
+                       software-properties-common \
+                       xsltproc \
+                       autoconf \
+                       automake \
+                       autotools-dev \ 
+                       gfortran \
+                       cmake \
+                       protobuf-compiler \
+                       make \
+                       gcc \
+                       wget \
+                       git \
+                       libc-dev \
+                       python3-dev \
+                       python3-pip \
+                       csh \
+                       libbz2-dev \
+                       perl \
+                       xsltproc \
+                       docbook-xsl \
+                       docbook-xml \
+                       zlib1g-dev \
+                       libeigen3-dev \
+                       gfortran \
+                       unzip \
+                       pkg-config libfreetype6-dev \
+                       libpng-dev \
+                       python3-matplotlib \
+                       default-jre \
+                       bash \
+                       libboost-dev
+
+#fastqc
+WORKDIR /opt
+RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && unzip fastqc_v0.12.1.zip
+RUN chmod 777 /opt/FastQC/fastqc
+
+#to fix language warning in fastqc
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
+
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=en_US.UTF-8
+
+ENV LANG en_US.UTF-8 
+
+ENV PATH="${PATH}:/opt/FastQC"
+
+#stacks for demultiplexing
+WORKDIR /opt
+RUN wget https://catchenlab.life.illinois.edu/stacks/source/stacks-2.66.tar.gz && tar xfvz stacks-2.66.tar.gz
+RUN cd /opt/stacks-2.66 && ./configure && make && make install
+
+#add miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    chmod 755 Miniconda3-latest-Linux-x86_64.sh && \
+    ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm Miniconda3-latest-Linux-x86_64.sh
+
+ENV PATH /opt/miniconda/bin:$PATH
+
+ENV CONDA_NAME ipyrad
+RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
+RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda"
+
+
+COPY startup.sh /opt
+
+
+RUN chmod 777 /opt/startup.sh
