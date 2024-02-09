@@ -72,6 +72,9 @@ ENV CONDA_NAME ipyrad
 RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
 RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda"
 
+# Install MultiQC using Conda
+RUN /bin/bash -c "source /opt/miniconda/bin/activate $CONDA_NAME && \
+                  conda install -c bioconda multiqc -y"
 
 COPY startup.sh /opt
 
