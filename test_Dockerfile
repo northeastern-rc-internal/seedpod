@@ -39,10 +39,6 @@ RUN apt-get update && \
                        bash \
                        libboost-dev
 
-#fastqc
-WORKDIR /opt
-RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && unzip fastqc_v0.12.1.zip
-RUN chmod 777 /opt/FastQC/fastqc
 
 #to fix language warning in fastqc
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
@@ -55,11 +51,6 @@ ENV LANG en_US.UTF-8
 
 ENV PATH="${PATH}:/opt/FastQC"
 
-#stacks for demultiplexing
-WORKDIR /opt
-RUN wget https://catchenlab.life.illinois.edu/stacks/source/stacks-2.66.tar.gz && tar xfvz stacks-2.66.tar.gz
-RUN cd /opt/stacks-2.66 && ./configure && make && make install
-
 #add miniconda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     chmod 755 Miniconda3-latest-Linux-x86_64.sh && \
@@ -70,10 +61,12 @@ ENV PATH /opt/miniconda/bin:$PATH
 
 ENV CONDA_NAME ipyrad
 RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
-RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda"
-
-# Install MultiQC using Conda
-RUN /bin/bash -c "source activate  $CONDA_NAME && conda install -c bioconda multiqc -y"
+RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad=0.9.92 -c conda-forge -c bioconda"
+# Install or update samtools in the conda environment
+RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y samtools -c bioconda"
+# Create another environment for Python 3.11 and install multiqc    
+RUN /bin/bash -c "conda create -n py3.11 python=3.11 -y" && \
+    /bin/bash -c "source activate py3.11 && conda install -y multiqc -c bioconda"
 
 COPY startup.sh /opt
 
