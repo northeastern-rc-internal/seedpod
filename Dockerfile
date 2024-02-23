@@ -56,9 +56,9 @@ ENV LANG en_US.UTF-8
 ENV PATH="${PATH}:/opt/FastQC"
 
 #stacks for demultiplexing
-WORKDIR /opt
-RUN wget https://catchenlab.life.illinois.edu/stacks/source/stacks-2.66.tar.gz && tar xfvz stacks-2.66.tar.gz
-RUN cd /opt/stacks-2.66 && ./configure && make && make install
+#WORKDIR /opt
+#RUN wget https://catchenlab.life.illinois.edu/stacks/source/stacks-2.66.tar.gz && tar xfvz stacks-2.66.tar.gz
+#RUN cd /opt/stacks-2.66 && ./configure && make && make install
 
 #add miniconda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
@@ -68,6 +68,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 
 ENV PATH /opt/miniconda/bin:$PATH
 
+#install ipyrad
 ENV CONDA_NAME ipyrad
 RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
 RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda"
@@ -75,7 +76,15 @@ RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c cond
 # Install MultiQC using Conda
 RUN /bin/bash -c "source activate $CONDA_NAME && conda install -c bioconda multiqc -y && multiqc --version"
 
-COPY startup.sh /opt
+#adding in angsd for genotype likelihoods
+RUN apt-get install -y liblzma-dev libcurl4-openssl-dev libssl-dev
+RUN wget http://popgen.dk/software/download/angsd/angsd0.940.tar.gz -P /opt && tar xvf /opt/angsd0.940.tar.gz \
+    && cd htslib;make && cd /opt/angsd && make HTSSRC=../htslib
 
+#set paths
+
+ENV PATH /opt/angsd/angsd:$PATH
+
+COPY startup.sh /opt
 
 RUN chmod 777 /opt/startup.sh
