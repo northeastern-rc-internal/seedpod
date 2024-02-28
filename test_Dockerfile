@@ -3,7 +3,7 @@ ENV TERM linux
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Install some base compilers and packages
+# Install base compilers and packages
 RUN apt-get update && \
     apt-get install -y build-essential \
                        software-properties-common \
@@ -31,48 +31,81 @@ RUN apt-get update && \
                        libeigen3-dev \
                        gfortran \
                        unzip \
-                       pkg-config libfreetype6-dev \
+                       pkg-config \
+                       libfreetype6-dev \
                        libpng-dev \
                        python3-matplotlib \
                        default-jre \
                        bash \
                        libboost-dev
 
-# FastQC
+# Install FastQC
 WORKDIR /opt
-RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && unzip fastqc_v0.12.1.zip
-RUN chmod 777 /opt/FastQC/fastqc
+RUN echo "Downloading FastQC..." && \
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && \
+    unzip fastqc_v0.12.1.zip && \
+    chmod 777 /opt/FastQC/fastqc
 
-# To fix language warning in FastQC
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales
-
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+# Fix language warning in FastQC
+RUN echo "Fixing language warning in FastQC..." && \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales && \
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
-
-ENV LANG en_US.UTF-8 
-
+ENV LANG en_US.UTF-8
 ENV PATH="${PATH}:/opt/FastQC"
 
-# Stacks for demultiplexing
-WORKDIR /opt
-RUN wget https://catchenlab.life.illinois.edu/stacks/source/stacks-2.66.tar.gz && tar xfvz stacks-2.66.tar.gz
-RUN cd /opt/stacks-2.66 && ./configure && make && make install
-
-# Add Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+# Install Miniconda
+RUN echo "Installing Miniconda..." && \
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     chmod 755 Miniconda3-latest-Linux-x86_64.sh && \
     ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
     rm Miniconda3-latest-Linux-x86_64.sh
-
 ENV PATH /opt/miniconda/bin:$PATH
 
+
 ENV CONDA_NAME ipyrad
-RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
+RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.5 -y"
 RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda && conda install -c conda-forge ncurses -y"
 
+# Install MultiQC using Conda
+RUN echo "Installing MultiQC..." && \
+    /bin/bash -c "source activate $CONDA_NAME && conda install -c bioconda multiqc -y"
+
+# Install ANGSD
+RUN echo "Installing ANGSD..." && \
+    apt-get install -y liblzma-dev libcurl4-openssl-dev libssl-dev && \
+    wget http://popgen.dk/software/download/angsd/angsd0.940.tar.gz -P /opt && \
+    tar xvf /opt/angsd0.940.tar.gz && \
+    cd htslib && make && cd /opt/angsd && make HTSSRC=../htslib
+ENV PATH /opt/angsd/angsd:$PATH
+
+# Install required system dependencies
+RUN echo "Installing system dependencies..." && \
+    apt-get update && \
+    apt-get install -y git && \
+    apt-get install -y python3-pip && \
+    apt-get install -y python3-dev && \
+    apt-get install -y build-essential
+
+# Install numpy, cython, and scipy via pip
+RUN echo "Installing numpy, cython, and scipy..." && \
+    pip3 install numpy cython scipy
+
+# Clone PCAngsd repository
+RUN echo "Cloning PCAngsd repository..." && \
+    git clone https://github.com/Rosemeis/pcangsd.git /opt/pcangsd
+
+# Change directory to PCAngsd
+WORKDIR /opt/pcangsd
+
+# Create a new Conda environment for PCAngsd
+RUN echo "Creating Conda environment for PCAngsd..." && \
+    /bin/bash -c "conda create -n pcangsd_env python=3.8 pip -y" && \
+    /bin/bash -c "source activate pcangsd_env && pip install ."
+ENV PATH /opt/pcangsd/pcangsd:$PATH
 
 COPY startup.sh /opt
-
-RUN chmod 777 /opt/startup.sh
+RUN echo "Setting permissions for startup script..." && \
+    chmod 777 /opt/startup.sh
 
