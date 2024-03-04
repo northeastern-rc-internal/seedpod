@@ -80,30 +80,22 @@ RUN echo "Installing ANGSD..." && \
     cd htslib && make && cd /opt/angsd && make HTSSRC=../htslib
 ENV PATH /opt/angsd/angsd:$PATH
 
-# Install required system dependencies
-RUN echo "Installing system dependencies..." && \
-    apt-get update && \
-    apt-get install -y git && \
-    apt-get install -y python3-pip && \
-    apt-get install -y python3-dev && \
-    apt-get install -y build-essential
-
-# Install numpy, cython, and scipy via pip
-RUN echo "Installing numpy, cython, and scipy..." && \
-    pip3 install numpy cython scipy
+# Set the working directory in the container
+WORKDIR /opt
 
 # Clone PCAngsd repository
-RUN echo "Cloning PCAngsd repository..." && \
-    git clone https://github.com/Rosemeis/pcangsd.git /opt/pcangsd
+RUN git clone https://github.com/Rosemeis/pcangsd.git
 
-# Change directory to PCAngsd
+# Change to the PCAngsd directory
 WORKDIR /opt/pcangsd
 
-# Create a new Conda environment for PCAngsd
-RUN echo "Creating Conda environment for PCAngsd..." && \
-    /bin/bash -c "conda create -n pcangsd_env python=3.8 pip -y" && \
-    /bin/bash -c "source activate pcangsd_env && pip install ."
-ENV PATH /opt/pcangsd/pcangsd:$PATH
+# Install PCAngsd dependencies via pip
+RUN pip install --no-cache-dir numpy cython scipy
+
+# Install PCAngsd
+RUN pip install .
+
+ENV PATH="${PATH}:/opt/pcangsd"
 
 COPY startup.sh /opt
 RUN echo "Setting permissions for startup script..." && \
