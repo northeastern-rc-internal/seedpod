@@ -80,10 +80,10 @@ RUN /bin/bash -c "source activate $CONDA_NAME && conda install -c bioconda multi
 RUN apt-get install -y liblzma-dev libcurl4-openssl-dev libssl-dev
 RUN wget http://popgen.dk/software/download/angsd/angsd0.940.tar.gz -P /opt && tar xvf /opt/angsd0.940.tar.gz \
     && cd htslib;make && cd /opt/angsd && make HTSSRC=../htslib
-
+RUN chmod 755 /opt/angsd/angsd
 #set paths
 
-ENV PATH /opt/angsd/angsd:$PATH
+ENV PATH /opt/angsd:$PATH
 
 COPY startup.sh /opt
 
