@@ -65,7 +65,7 @@ ENV PATH /opt/miniconda/bin:$PATH
 
 
 ENV CONDA_NAME ipyrad
-RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.5 -y"
+RUN /bin/bash -c "conda create -n $CONDA_NAME python=3.10 -y"
 RUN /bin/bash -c "source activate $CONDA_NAME && conda install -y ipyrad -c conda-forge -c bioconda && conda install -c conda-forge ncurses -y"
 
 # Install MultiQC using Conda
@@ -82,20 +82,23 @@ ENV PATH /opt/angsd/angsd:$PATH
 
 # Set the working directory in the container
 WORKDIR /opt
-
 # Clone PCAngsd repository
 RUN git clone https://github.com/Rosemeis/pcangsd.git
-
 # Change to the PCAngsd directory
 WORKDIR /opt/pcangsd
-
 # Install PCAngsd dependencies via pip
 RUN pip install --no-cache-dir numpy cython scipy
-
 # Install PCAngsd
 RUN pip install .
-
 ENV PATH="${PATH}:/opt/pcangsd"
+
+# Create a new Conda environment for R and install R and RStudio
+ENV R_CONDA_NAME r_env
+RUN conda create -n $R_CONDA_NAME r-base r-essentials rstudio -y -c conda-forge
+
+# Optionally, install additional R packages
+RUN conda run -n $R_CONDA_NAME R -e "install.packages(c('ggplot2', 'dplyr'), repos='http://cran.rstudio.com/')"
+
 
 COPY startup.sh /opt
 RUN echo "Setting permissions for startup script..." && \
