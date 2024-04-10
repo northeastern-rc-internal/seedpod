@@ -31,6 +31,8 @@ RUN apt-get update && \
                        libeigen3-dev \
                        gfortran \
                        unzip \
+                       vim \
+                       nano \
                        pkg-config \
                        libfreetype6-dev \
                        libpng-dev \
@@ -47,7 +49,7 @@ RUN apt-get update && \
 WORKDIR /opt
 RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip && \
     unzip fastqc_v0.12.1.zip && \
-    chmod 777 /opt/FastQC/fastqc
+    chmod 777 /opt/FastQC/fastqc && rm /opt/fastqc_v0.12.1.zip
 
 # Fix language warning in FastQC
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y locales && \
@@ -84,7 +86,7 @@ RUN git clone https://github.com/Rosemeis/pcangsd.git /opt/pcangsd  && \
 
 #install plink2
 RUN wget https://s3.amazonaws.com/plink2-assets/alpha5/plink2_linux_amd_avx2_20240105.zip -P /opt && \
-    unzip plink2_linux_amd_avx2_20240105.zip        
+    unzip plink2_linux_amd_avx2_20240105.zip && rm /opt/plink2_linux_amd_avx2_20240105.zip
 
 #install R
 RUN apt-get update && apt-get install r-base r-base-dev -y
@@ -106,10 +108,27 @@ RUN apt-get install gdebi-core -y && wget https://download2.rstudio.org/server/j
 RUN git clone https://github.com/vcftools/vcftools.git /opt/vcftools && \
     cd /opt/vcftools && ./autogen.sh && ./configure && make && make install
 
+#install bcftools
+RUN wget https://github.com/samtools/bcftools/releases/download/1.19/bcftools-1.19.tar.bz2 -P /opt && \
+    tar xjvf /opt/bcftools-1.19.tar.bz2 && cd /opt/bcftools-1.19 && ./configure && make && make install && \
+    rm /opt/bcftools-1.19.tar.bz2
 
-ENV PATH /opt:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:${PATH}
+#install ngsrelate
+RUN git clone https://github.com/ANGSD/ngsRelate /opt/ngsRelate && \
+    cd /opt/htslib/ && make -j2 && cd ../ngsRelate && make HTSSRC=../htslib/    
+
+#install migrate
+RUN wget https://peterbeerli.com/migrate-html5/download_version4/migrate-newest.src.tar.gz -P /opt && \
+    tar xvf /opt/migrate-newest.src.tar.gz && cd /opt/migrate-5.0.6/src && ./configure && make && make install \
+    && rm /opt/migrate-newest.src.tar.gz 
+
+#FEEMS
+ENV CONDA_NAME2 feems
+RUN /bin/bash -c "conda create -n $CONDA_NAME2 -y"
+RUN /bin/bash -c "source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y"
+
+ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:${PATH}
 
 COPY startup.sh /opt
-
 
 RUN chmod 777 /opt/startup.sh
