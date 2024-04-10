@@ -31,6 +31,8 @@ RUN apt-get update && \
                        libeigen3-dev \
                        gfortran \
                        unzip \
+                       vim \
+                       nano \
                        pkg-config \
                        libfreetype6-dev \
                        libpng-dev \
@@ -117,8 +119,13 @@ RUN git clone https://github.com/ANGSD/ngsRelate /opt/ngsRelate && \
 
 #install migrate
 RUN wget https://peterbeerli.com/migrate-html5/download_version4/migrate-newest.src.tar.gz -P /opt && \
-    tar xvzf /opt/migrate-newest.src.tar.gz && cd /opt/migrate-5.0.5/src && ./configure && make && make install \
+    tar xvf /opt/migrate-newest.src.tar.gz && cd /opt/migrate-5.0.6/src && ./configure && make && make install \
     && rm /opt/migrate-newest.src.tar.gz 
+
+#FEEMS
+ENV CONDA_NAME2 feems
+RUN /bin/bash -c "conda create -n $CONDA_NAME2 -y"
+RUN /bin/bash -c "source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y"
 
 ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:${PATH}
 
