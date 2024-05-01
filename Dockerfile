@@ -137,6 +137,7 @@ RUN /bin/bash -c "source /opt/miniconda/bin/activate feems_e && \
                   pip install /opt/feems"
 
 
+
 ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:${PATH}
 
 COPY startup.sh /opt
