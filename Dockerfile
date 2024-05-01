@@ -123,9 +123,20 @@ RUN wget https://peterbeerli.com/migrate-html5/download_version4/migrate-newest.
     && rm /opt/migrate-newest.src.tar.gz 
 
 #FEEMS
-ENV CONDA_NAME2 feems
-RUN /bin/bash -c "conda create -n $CONDA_NAME2 -y"
-RUN /bin/bash -c "source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y"
+#ENV CONDA_NAME2 feems
+#RUN /bin/bash -c "conda create -n $CONDA_NAME2 -y"
+#RUN /bin/bash -c "source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y"
+
+RUN /bin/bash -c "conda create -n feems_e python=3.8.3 -y && \
+                  source activate feems_e && \
+                  conda install -c conda-forge geopandas=0.9.0 numpy=1.22.3 scipy=1.5.0 scikit-learn=0.23.1 matplotlib=3.2.2 pyproj=2.6.1.post1 networkx=2.4.0 shapely=1.7.1 fiona pytest=5.4.3 pep8=1.7.1 flake8=3.8.3 click=7.1.2 setuptools pandas-plink msprime=1.0.0 statsmodels=0.12.2 PyYAML=5.4.1 xlrd=2.0.1 openpyxl=3.0.7 suitesparse=5.7.2 scikit-sparse=0.4.4 cartopy=0.18.0 -y"
+
+# Clone and install FEEMS
+RUN /bin/bash -c "source /opt/miniconda/bin/activate feems_e && \
+                  git clone https://github.com/NovembreLab/feems.git /opt/feems && \
+                  pip install /opt/feems"
+
+
 
 ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:${PATH}
 
