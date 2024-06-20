@@ -43,6 +43,19 @@ RUN apt-get update && \
                        liblzma-dev  \ 
                        libcurl4-openssl-dev \
                        libssl-dev \
+                       lib32gcc-s1 \
+                       lib32stdc++6 \
+                       libc6-i386 \
+                       libclang-14-dev \
+                       libclang-common-14-dev \
+                       libclang-dev \
+                       libclang1-14 \
+                       libgc1 \
+                       libllvm14 \
+                       libobjc-11-dev \
+                       libobjc4 \
+                       libxcb-xkb1 \
+                       libxkbcommon-x11-0 \
                        gdebi-core
 
 # Install FastQC
@@ -89,20 +102,52 @@ RUN wget https://s3.amazonaws.com/plink2-assets/alpha5/plink2_linux_amd_avx2_202
     unzip plink2_linux_amd_avx2_20240105.zip && rm /opt/plink2_linux_amd_avx2_20240105.zip
 
 #install R
-RUN apt-get update && apt-get install r-base r-base-dev -y
+RUN apt-get update && apt-get install -y r-base-dev r-base-core
 RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
 
+#Install rstudio
+RUN apt-get install gdebi-core -y && wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.1-402-amd64.deb -P /opt && \
+    gdebi --n /opt/rstudio-server-2023.12.1-402-amd64.deb 
+
 #install R packages
-RUN MAKEFLAGS=4 R -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")' 
 RUN MAKEFLAGS=4 R -e 'install.packages("ggplot2", repos = "http://cran.us.r-project.org")'
 RUN MAKEFLAGS=4 R -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
 RUN MAKEFLAGS=4 R -e 'install.packages("ggrepel", repos = "http://cran.us.r-project.org")'
 RUN MAKEFLAGS=4 R -e 'install.packages("rstan", repos = "http://cran.us.r-project.org")'
 RUN MAKEFLAGS=4 R -e 'install.packages("conStruct", repos = "http://cran.us.r-project.org")'
-
-#Install rstudio
-RUN apt-get install gdebi-core -y && wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2023.12.1-402-amd64.deb -P /opt && \
-    gdebi /opt/rstudio-server-2023.12.1-402-amd64.deb && rm /opt/rstudio-server-2023.12.1-402-amd64.deb
+RUN MAKEFLAGS=4 R -e 'install.packages("vcfR", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("adegenet", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("hierfstat", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("doParallel", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("dplyr", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("reshape2", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("circlize", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("foreach", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("grid", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("ggdendro", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("dendextend", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("readxl", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("readr", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("data.table", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("sf", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("raster", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("spData", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("spDataLarge", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("tmap", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("leaflet", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("shiny", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("shinyjs", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("sp", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("plotly", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("pracma", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("stringr", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("ggplot2", repos = "http://cran.us.r-project.org")'
+RUN MAKEFLAGS=4 R -e 'install.packages("stats", repos = "http://cran.us.r-project.org")'
+# Install BiocManager if not already installed
+RUN MAKEFLAGS=4 R -e 'install.packages("BiocManager", repos = "http://cran.us.r-project.org")'
+# Install ComplexHeatmap from Bioconductor
+RUN MAKEFLAGS=4 R -e 'BiocManager::install("ComplexHeatmap")'
 
 #Install vcftools
 RUN git clone https://github.com/vcftools/vcftools.git /opt/vcftools && \
@@ -118,14 +163,14 @@ RUN git clone https://github.com/ANGSD/ngsRelate /opt/ngsRelate && \
     cd /opt/htslib/ && make -j2 && cd ../ngsRelate && make HTSSRC=../htslib/    
 
 #install migrate
-RUN wget https://peterbeerli.com/migrate-html5/download_version4/migrate-newest.src.tar.gz -P /opt && \
-    tar xvf /opt/migrate-newest.src.tar.gz && cd /opt/migrate-5.0.6/src && ./configure && make && make install \
-    && rm /opt/migrate-newest.src.tar.gz 
+#RUN wget https://peterbeerli.com/migrate-html5/download_version4/migrate-newest.src.tar.gz -P /opt && \
+#    tar xvf /opt/migrate-newest.src.tar.gz && cd /opt/migrate-5.0.6/src && ./configure && make && make install \
+#    && rm /opt/migrate-newest.src.tar.gz 
 
 #FEEMS
 #ENV CONDA_NAME2 feems
-#RUN /bin/bash -c "conda create -n $CONDA_NAME2 -y"
-#RUN /bin/bash -c "source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y"
+#RUN /bin/bash -c 'conda create -n $CONDA_NAME2 -y'
+#RUN /bin/bash -c 'source activate $CONDA_NAME2 && conda install -c bioconda feems -c conda-forge -y'
 
 RUN /bin/bash -c "conda create -n feems_e python=3.8.3 -y && \
                   source activate feems_e && \
@@ -138,7 +183,7 @@ RUN /bin/bash -c "source /opt/miniconda/bin/activate feems_e && \
 
 
 
-ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:${PATH}
+ENV PATH /opt:/opt/bcftools-1.19:/opt/plink2:/opt/console:/opt/pcangsd:/opt/angsd:/opt/angsd/misc:/opt/MultiQC:/opt/miniconda/bin:/opt/FastQC:/opt/vcftools/src/cpp:/opt/migrate-newest/src:/opt/ngsRelate:/opt/angsd/misc:${PATH}
 
 COPY startup.sh /opt
 
