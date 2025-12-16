@@ -4,13 +4,13 @@ Co-Op project to containerize an entire bioinformatic workflow into a seedpod.
 
 We built a bioinformatics container image which includes the following software:
 
-FastQC/MultiQC
-Miniconda
-ipyrad
-ANGSD
-PCAngsd
-plink2
-R
+* FastQC/MultiQC
+* Miniconda
+* ipyrad
+* ANGSD
+* PCAngsd
+* plink2
+* R
 vcftools
 bcftools
 ngsrelate
