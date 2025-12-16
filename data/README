@@ -1,0 +1,21 @@
+Heterozygosity data is in these files: 
+
+keep_spal_het_table.txt
+keep_sppa_get_table.txt
+
+and has these associated metadata: 
+
+meta_spal_het.txt
+meta_sppa_het.txt
+
+Relatedness is pairwise where sample a is compared against sample b. We used rab as the relatedness metric, but the output of NGS relate provides several other relatedness metrics. You can read more about them here: https://github.com/ANGSD/NgsRelate
+
+Relatedness is in these files:
+
+sppa_sites_names_ab
+spal_sites_names_ab
+
+And the metadata for relatedness is here:
+
+sppa_sites_names
+spal_sites_names
