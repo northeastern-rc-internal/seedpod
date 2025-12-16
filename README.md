@@ -11,10 +11,10 @@ We built a bioinformatics container image which includes the following software:
 * PCAngsd
 * plink2
 * R
-vcftools
-bcftools
-ngsrelate
-FEEMS
+* vcftools
+* bcftools
+* ngsrelate
+* FEEMS
 
 The image is available for use at: containers.rc.northeastern.edu/seedpod/seedpod:rstudio
 
