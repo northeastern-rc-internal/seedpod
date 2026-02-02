@@ -1,0 +1,21 @@
+	-> angsd version:  (htslib: 1.16) build(Jun  5 2024 18:01:21)
+	-> angsd -b ../../rawdata/bam_lists/spal/filt_full_list -doDepth 1 -doCounts 1 -out spal_depth_counts 
+	-> Mon Feb  2 10:27:58 2026
+----------------
+multiReader.cpp:
+	-nLines	50	(Number of lines to read)
+	-beagle	(null)	(Beagle Filename (can be .gz))
+	-bgen	(null)	(Bgen Filename)
+	-vcf-GL	(null)	(vcf Filename (can be bcf compressed or uncompressed))
+	-vcf-PL	(null)	(vcf Filename (can be bcf compressed or uncompressed))
+	-vcf-GP	(null)	(vcf Filename (can be bcf compressed or uncompressed))(*not used)
+	-glf	(null)	(glf Filename (can be .gz))
+	-pileup	(null)	(pileup Filename (can be .gz))
+	-intName 1	(Assume First column is chr_position)
+	-isSim	0	(Simulated data assumes ancestral is A)
+	-nInd	0		(Number of individuals)
+	-minQ	13	(minimum base quality; only used in pileupreader)
+	-fai	(null)	(fai file)
+	-minQ	13	(minimum base quality; only used in pileupreader)
+----------------
+multiReader.cpp:
