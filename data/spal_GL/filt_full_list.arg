@@ -1,6 +1,6 @@
 	-> angsd version:  (htslib: 1.16) build(Jun  5 2024 18:01:21)
-	-> /opt/angsd/angsd -b /work/seedpod/rawdata/bam_lists/spal/full_list -ref /work/seedpod/reference/updated.fasta -out /work/seedpod/output/angsd_spal_SC/full_list_filt -GL 2 -doMajorMinor 1 -doGlf 2 -doMaf 2 -SNP_pval 1e-6 -minMapQ 30 -minQ 20 -minMaf 0.05 -minInd 350 -P 32 
-	-> Wed Jul 24 18:55:43 2024
+	-> /opt/angsd/angsd -b /work/seedpod/rawdata/bam_lists/spal/filt_full_list -ref /work/seedpod/reference/updated.fasta -out /work/seedpod/output/angsd_spal_SC/filt_full_list -GL 2 -doMajorMinor 1 -doGlf 2 -doMaf 2 -SNP_pval 1e-6 -minMapQ 30 -minQ 20 -minMaf 0.05 -minInd 315 -P 32 
+	-> Sat Oct 12 23:22:12 2024
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -21,8 +21,8 @@ multiReader.cpp:
 multiReader.cpp:
 ---------------
 parseArgs_bambi.cpp: bam reader:
-	-bam/-b		/work/seedpod/rawdata/bam_lists/spal/full_list	(list of BAM/CRAM files)
-	-i		/work/seedpod/rawdata/bam_lists/spal/full_list	(Single BAM/CRAM file)
+	-bam/-b		/work/seedpod/rawdata/bam_lists/spal/filt_full_list	(list of BAM/CRAM files)
+	-i		/work/seedpod/rawdata/bam_lists/spal/filt_full_list	(Single BAM/CRAM file)
 	-r		(null)	Supply a single region in commandline (see examples below)
 	-rf		(null)	Supply multiple regions in a file (see examples below)
 	-remove_bads	1	Discard 'bad' reads, (flag & 512) 
@@ -64,7 +64,7 @@ abcFilter.cpp:
 	-sites		(null)	(File containing sites to keep (chr regStart regStop))
 	-sites		(null)	(File containing sites to keep (chr pos major minor))
 	-sites		(null)	(File containing sites to keep (chr pos major minor af ac an))
-	-minInd		350	Only use site if atleast minInd of samples has data
+	-minInd		315	Only use site if atleast minInd of samples has data
 	-setMinDepthInd	1	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
 	-strict	1	 (experimental)
@@ -114,7 +114,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		350		(0 indicates no filtering)
+	-minInd		315		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	2
@@ -137,7 +137,7 @@ abcGL.cpp:
 	-trim		0		(zero means no trimming)
 	-tmpdir		angsd_tmpdir/	(used by SOAPsnp)
 	-errors		(null)		(used by SYK)
-	-minInd		350		(0 indicates no filtering)
+	-minInd		315		(0 indicates no filtering)
 
 Filedumping:
 	-doGlf	2
@@ -192,9 +192,9 @@ abcHetPlas.cpp:
 	-doHetPlas=0 (Perform hetplasmid analysis)
 	-maxIter=100	(Max number of iterations)
 	-minLRT=-1.000000
-		->"/work/seedpod/output/angsd_spal_SC/full_list_filt.arg"
-		->"/work/seedpod/output/angsd_spal_SC/full_list_filt.beagle.gz"
-		->"/work/seedpod/output/angsd_spal_SC/full_list_filt.mafs.gz"
+		->"/work/seedpod/output/angsd_spal_SC/filt_full_list.arg"
+		->"/work/seedpod/output/angsd_spal_SC/filt_full_list.beagle.gz"
+		->"/work/seedpod/output/angsd_spal_SC/filt_full_list.mafs.gz"
 
-	[ALL done] cpu-time used =  5384.65 sec
-	[ALL done] walltime used =  1972.00 sec
+	[ALL done] cpu-time used =  8671.59 sec
+	[ALL done] walltime used =  2966.00 sec
