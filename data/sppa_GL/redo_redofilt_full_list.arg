@@ -1,6 +1,6 @@
 	-> angsd version:  (htslib: 1.16) build(Jun  5 2024 18:01:21)
-	-> /opt/angsd/angsd -b /work/seedpod/rawdata/bam_lists/sppa/filt_full_list -ref /work/seedpod/reference/updated.fasta -out /work/seedpod/output/angsd_sppa_SC/redofilt_full_list -GL 2 -doMajorMinor 1 -doGlf 2 -doMaf 2 -SNP_pval 1e-6 -minMapQ 30 -minQ 20 -minMaf 0.05 -minInd 300 -P 32 
-	-> Mon Jul  7 16:38:29 2025
+	-> /opt/angsd/angsd -b /projects/seedpod/rawdata/bam_lists/sppa/filt_full_list -ref /projects/seedpod/reference/updated.fasta -out /projects/seedpod/output/angsd_sppa_SC/redo_redofilt_full_list -GL 2 -doMajorMinor 1 -doGlf 2 -doMaf 2 -SNP_pval 1e-6 -minMapQ 30 -minQ 20 -minMaf 0.05 -minInd 300 -P 32 
+	-> Wed Feb  4 12:33:31 2026
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -21,8 +21,8 @@ multiReader.cpp:
 multiReader.cpp:
 ---------------
 parseArgs_bambi.cpp: bam reader:
-	-bam/-b		/work/seedpod/rawdata/bam_lists/sppa/filt_full_list	(list of BAM/CRAM files)
-	-i		/work/seedpod/rawdata/bam_lists/sppa/filt_full_list	(Single BAM/CRAM file)
+	-bam/-b		/projects/seedpod/rawdata/bam_lists/sppa/filt_full_list	(list of BAM/CRAM files)
+	-i		/projects/seedpod/rawdata/bam_lists/sppa/filt_full_list	(Single BAM/CRAM file)
 	-r		(null)	Supply a single region in commandline (see examples below)
 	-rf		(null)	Supply multiple regions in a file (see examples below)
 	-remove_bads	1	Discard 'bad' reads, (flag & 512) 
@@ -180,7 +180,21 @@ Filters:
 	-forceMaf	0	(Write .mafs file when running -doAsso (by default does not output .mafs file with -doAsso))
 	-skipMissing	1	(Set post to 0.33 if missing (do not use freq as prior))
 Extras:
-	-ref	/work/seedpod/reference/updated.fasta	(Filename for fasta reference)
+	-ref	/projects/seedpod/reference/updated.fasta	(Filename for fasta reference)
 	-anc	(null)	(Filename for fasta ancestral)
 	-eps	0.001000 [Only used for -doMaf &8]
-	-beagleProb	0 (Dump be
+	-beagleProb	0 (Dump beagle style postprobs)
+	-indFname	(null) (file containing individual inbreedcoeficients)
+	-underFlowProtect	0 (file containing individual inbreedcoeficients)
+NB These frequency estimators requires major/minor -doMajorMinor
+------------------------
+abcHetPlas.cpp:
+	-doHetPlas=0 (Perform hetplasmid analysis)
+	-maxIter=100	(Max number of iterations)
+	-minLRT=-1.000000
+		->"/projects/seedpod/output/angsd_sppa_SC/redo_redofilt_full_list.arg"
+		->"/projects/seedpod/output/angsd_sppa_SC/redo_redofilt_full_list.beagle.gz"
+		->"/projects/seedpod/output/angsd_sppa_SC/redo_redofilt_full_list.mafs.gz"
+
+	[ALL done] cpu-time used =  1566.15 sec
+	[ALL done] walltime used =  1746.00 sec
