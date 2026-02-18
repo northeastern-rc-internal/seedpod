@@ -1,6 +1,6 @@
 	-> angsd version:  (htslib: 1.16) build(Jun  5 2024 18:01:21)
-	-> angsd -b ../../rawdata/bam_lists/spal/filt_full_list -doDepth 1 -doCounts 1 -out spal_depth_counts 
-	-> Mon Feb  2 16:31:58 2026
+	-> /opt/angsd/angsd -b /projects/seedpod/rawdata/bam_lists/spal/filt_full_list -dumpCounts 2 -minMapQ 30 -minQ 20 -doDepth 1 -doCounts 1 -sites /projects/seedpod/output/sites_spal2.txt -out /projects/seedpod/output/spal_depth_counts 
+	-> Wed Feb 18 17:02:48 2026
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -14,22 +14,22 @@ multiReader.cpp:
 	-intName 1	(Assume First column is chr_position)
 	-isSim	0	(Simulated data assumes ancestral is A)
 	-nInd	0		(Number of individuals)
-	-minQ	13	(minimum base quality; only used in pileupreader)
+	-minQ	20	(minimum base quality; only used in pileupreader)
 	-fai	(null)	(fai file)
-	-minQ	13	(minimum base quality; only used in pileupreader)
+	-minQ	20	(minimum base quality; only used in pileupreader)
 ----------------
 multiReader.cpp:
 ---------------
 parseArgs_bambi.cpp: bam reader:
-	-bam/-b		../../rawdata/bam_lists/spal/filt_full_list	(list of BAM/CRAM files)
-	-i		../../rawdata/bam_lists/spal/filt_full_list	(Single BAM/CRAM file)
+	-bam/-b		/projects/seedpod/rawdata/bam_lists/spal/filt_full_list	(list of BAM/CRAM files)
+	-i		/projects/seedpod/rawdata/bam_lists/spal/filt_full_list	(Single BAM/CRAM file)
 	-r		(null)	Supply a single region in commandline (see examples below)
 	-rf		(null)	Supply multiple regions in a file (see examples below)
 	-remove_bads	1	Discard 'bad' reads, (flag & 512) 
 	-uniqueOnly	0	Discards reads that doesn't map uniquely
 	-show		0	Mimic 'samtools mpileup' also supply -ref fasta for printing reference column
-	-minMapQ	0	Discard reads with mapping quality below
-	-minQ		13	Discard bases with base quality below
+	-minMapQ	30	Discard reads with mapping quality below
+	-minQ		20	Discard bases with base quality below
 	-trim		0	Number of based to discard at both ends of the reads
 	-trim		0	Number of based to discard at 5' ends of the reads
 	-trim		0	Number of based to discard at 3' ends of the reads
@@ -60,10 +60,10 @@ Examples for region specification:
 	-howOften	100	How often should the program show progress
 --------------
 abcFilter.cpp:
-	-sites		(null)	(File containing sites to keep (chr pos))
-	-sites		(null)	(File containing sites to keep (chr regStart regStop))
-	-sites		(null)	(File containing sites to keep (chr pos major minor))
-	-sites		(null)	(File containing sites to keep (chr pos major minor af ac an))
+	-sites		/projects/seedpod/output/sites_spal2.txt	(File containing sites to keep (chr pos))
+	-sites		/projects/seedpod/output/sites_spal2.txt	(File containing sites to keep (chr regStart regStop))
+	-sites		/projects/seedpod/output/sites_spal2.txt	(File containing sites to keep (chr pos major minor))
+	-sites		/projects/seedpod/output/sites_spal2.txt	(File containing sites to keep (chr pos major minor af ac an))
 	-minInd		0	Only use site if atleast minInd of samples has data
 	-setMinDepthInd	1	Only use site if atleast minInd of samples has this minimum depth 
 	-capDepth	-1	Only use the first capDepth bases
@@ -91,8 +91,8 @@ Filedumping:
 	-doDepth	1	(dump distribution of seqdepth)	.depthSample,.depthGlobal
 	  -maxDepth	100	(bin together high depths)
 	-doQsDist	0	(dump distribution of qscores)	.qs
-	-minQ	13	(minimumQ)
-	-dumpCounts	0
+	-minQ	20	(minimumQ)
+	-dumpCounts	2
 	  1: total seqdepth for site	.pos.gz
 	  2: seqdepth persample		.pos.gz,.counts.gz
 	  3: A,C,G,T sum over samples	.pos.gz,.counts.gz
@@ -130,9 +130,11 @@ abcHetPlas.cpp:
 	-doHetPlas=0 (Perform hetplasmid analysis)
 	-maxIter=100	(Max number of iterations)
 	-minLRT=-1.000000
-		->"spal_depth_counts.arg"
-		->"spal_depth_counts.depthSample"
-		->"spal_depth_counts.depthGlobal"
+		->"/projects/seedpod/output/spal_depth_counts.arg"
+		->"/projects/seedpod/output/spal_depth_counts.pos.gz"
+		->"/projects/seedpod/output/spal_depth_counts.counts.gz"
+		->"/projects/seedpod/output/spal_depth_counts.depthSample"
+		->"/projects/seedpod/output/spal_depth_counts.depthGlobal"
 
-	[ALL done] cpu-time used =  4509.34 sec
-	[ALL done] walltime used =  4550.00 sec
+	[ALL done] cpu-time used =  1281.44 sec
+	[ALL done] walltime used =  1307.00 sec
