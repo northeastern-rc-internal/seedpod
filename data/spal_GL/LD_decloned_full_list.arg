@@ -1,6 +1,6 @@
 	-> angsd version:  (htslib: 1.16) build(Jun  5 2024 18:01:21)
 	-> /opt/angsd/angsd -b /projects/seedpod/rawdata/bam_lists/spal/decloned_full_list -ref /projects/seedpod/reference/updated.fasta -out /projects/seedpod/output/angsd_spal_SC/LD_decloned_full_list -sites /projects/seedpod/output/SPALLLD_unlinked.pos -GL 2 -doMajorMinor 1 -doGlf 2 -doMaf 2 -SNP_pval 1e-6 -minMapQ 30 -minQ 20 -minMaf 0.05 -minInd 300 -P 8 
-	-> Tue Mar  3 12:34:42 2026
+	-> Fri Mar  6 13:55:25 2026
 ----------------
 multiReader.cpp:
 	-nLines	50	(Number of lines to read)
@@ -196,5 +196,5 @@ abcHetPlas.cpp:
 		->"/projects/seedpod/output/angsd_spal_SC/LD_decloned_full_list.beagle.gz"
 		->"/projects/seedpod/output/angsd_spal_SC/LD_decloned_full_list.mafs.gz"
 
-	[ALL done] cpu-time used =  4625.09 sec
-	[ALL done] walltime used =  2052.00 sec
+	[ALL done] cpu-time used =  4468.98 sec
+	[ALL done] walltime used =  1914.00 sec
