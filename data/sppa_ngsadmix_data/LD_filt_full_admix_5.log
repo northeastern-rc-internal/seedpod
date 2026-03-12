@@ -1,0 +1,9 @@
+Input: lname=/projects/seedpod/output/angsd_sppa_SC/LD_filtfilt_full_list.beagle.gz nPop=5, fname=(null) qname=(null) outfiles=/projects/seedpod/output/ngsadmix_SC/sppa/LD_filt_full_admix_5
+Setup: seed=1772995684 nThreads=4 method=1
+Convergence: maxIter=5000 tol=0.000100 tolLike50=0.000100 dymBound=1
+Filters: misTol=0.050000 minMaf=0.050000 minLrt=0.050000 minInd=0
+Input file has dim: nsites=5695 nind=350
+Input file has dim (AFTER filtering): nsites=5695 nind=350
+	[ALL done] cpu-time used =  54.63 sec
+	[ALL done] walltime used =  15.00 sec
+best like=-1183866.864528 after 352 iterations
