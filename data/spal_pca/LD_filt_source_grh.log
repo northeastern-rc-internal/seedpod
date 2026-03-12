@@ -1,0 +1,17 @@
+PCAngsd v1.36.4
+Time: 03/03/2026 13:12:13
+Directory: /projects/seedpod/sbatch
+Options:
+	--beagle /projects/seedpod/output/angsd_spal_SC//LD_filt_source_grh_list.beagle.gz
+	--threads 8
+	--out /projects/seedpod/output/pcangsd_SC/spal//LD_filt_source_grh
+	--pcadapt
+
+Loaded 6700 sites and 296 samples.
+Number of sites after MAF filtering (0.05): 6700
+
+PCAngsd did not converge using 15 eigenvectors!
+Saved covariance matrix as /projects/seedpod/output/pcangsd_SC/spal//LD_filt_source_grh.cov
+Saved z-scores as /projects/seedpod/output/pcangsd_SC/spal//LD_filt_source_grh.pcadapt.zscores
+
+Total elapsed time: 0m18s

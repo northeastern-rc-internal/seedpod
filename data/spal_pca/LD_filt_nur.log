@@ -1,0 +1,17 @@
+PCAngsd v1.36.4
+Time: 03/03/2026 13:11:25
+Directory: /projects/seedpod/sbatch
+Options:
+	--beagle /projects/seedpod/output/angsd_spal_SC//LD_filt_nur_list.beagle.gz
+	--threads 8
+	--out /projects/seedpod/output/pcangsd_SC/spal//LD_filt_nur
+	--pcadapt
+
+Loaded 4106 sites and 32 samples.
+Number of sites after MAF filtering (0.05): 4106
+
+PCAngsd converged in 35 iterations using 1 eigenvectors.
+Saved covariance matrix as /projects/seedpod/output/pcangsd_SC/spal//LD_filt_nur.cov
+Saved z-scores as /projects/seedpod/output/pcangsd_SC/spal//LD_filt_nur.pcadapt.zscores
+
+Total elapsed time: 0m1s
