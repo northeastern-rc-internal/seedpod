@@ -24,7 +24,7 @@ sites_sppa<-cbind(sppa_meta[,c(2,3,4)])
 sppa_het$sites<-paste(sites_sppa$V3, sites_sppa$V4, sep="_")
 sppa_het$site_simple<-sppa_meta$V3
 
-hist(spal_het$hetero_est)
+#hist(spal_het$O.HOM./(spal_het$N_SITES+spal_het$E.HOM.))
 hist(sppa_het$hetero_est)
 
 mean(spal_het$hetero_est)
@@ -36,9 +36,9 @@ mean(spal_het$error_est)
 library(rlang)
 library(ggplot2)
 
-sppa_het$three<-replace( sppa_het$site_simple, sppa_het$site_simple=="BEL","Source")
-sppa_het$three<-replace( sppa_het$three, sppa_het$three=="ROW","Source")
-sppa_het$three<-replace( sppa_het$three, sppa_het$three=="RUM","Source")
+sppa_het$three<-replace( sppa_het$site_simple, sppa_het$site_simple=="BEL","Local")
+sppa_het$three<-replace( sppa_het$three, sppa_het$three=="ROW","Local")
+sppa_het$three<-replace( sppa_het$three, sppa_het$three=="RUM","Local")
 sppa_het$three<-replace( sppa_het$three, sppa_het$three=="NUR","Nursery")
 sppa_het$three<-replace( sppa_het$three, sppa_het$three=="GRH","Greenhouse")
 
@@ -53,9 +53,9 @@ ggplot(sppa_het, aes(three, hetero_est, fill=three, group=three))+
 
 # for spal
 
-spal_het$three<-replace( spal_het$site_simple, spal_het$site_simple=="BEL","Source")
-spal_het$three<-replace( spal_het$three, spal_het$three=="ROW","Source")
-spal_het$three<-replace( spal_het$three, spal_het$three=="RUM","Source")
+spal_het$three<-replace( spal_het$site_simple, spal_het$site_simple=="BEL","Local")
+spal_het$three<-replace( spal_het$three, spal_het$three=="ROW","Local")
+spal_het$three<-replace( spal_het$three, spal_het$three=="RUM","Local")
 spal_het$three<-replace( spal_het$three, spal_het$three=="NUR","Nursery")
 spal_het$three<-replace( spal_het$three, spal_het$three=="GRH","Greenhouse")
 
@@ -77,8 +77,8 @@ colnames(names)<-c("sites", "names", "colors")
 
 #fix up name order
 
-sppa_het$three <- factor(sppa_het$three, levels=c("Source", "Greenhouse", "Nursery"))
-spal_het$three <- factor(spal_het$three, levels=c("Source", "Greenhouse", "Nursery"))
+sppa_het$three <- factor(sppa_het$three, levels=c("Local", "Greenhouse", "Nursery"))
+spal_het$three <- factor(spal_het$three, levels=c("Local", "Greenhouse", "Nursery"))
 
 spal_het_names<-merge(names, spal_het)
 
@@ -86,7 +86,7 @@ A<-ggplot(spal_het_names, aes(names, hetero_est, fill=names, group=names))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   scale_x_discrete(name="Site", labels=c("Belle Isle", "Bell Isle (GRH)", "Nursery (MD)", "Nursery (MA)", "Nursery (NJ)", "Rowley", "Rowley (GRH)", "Rumney", "Rumney (GRH)"))+
-  scale_fill_manual(values=c("paleturquoise3","gold3", "thistle3", "thistle2", "thistle", "paleturquoise2","gold2", "paleturquoise","gold"))+
+  scale_fill_manual(values=c("paleturquoise","gold", "thistle2", "thistle4", "thistle3", "paleturquoise3","gold3", "paleturquoise4","gold4"))+
   ylab("Heterozygosity Estimate")+
   ggtitle("(A) S. alterniflora")
 
@@ -101,7 +101,7 @@ B<-ggplot(sppa_het_names, aes(names, hetero_est, fill=names, group=names))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   scale_x_discrete(name="Site", labels=c("Belle Isle", "Bell Isle (GRH)", "Nursery (MD)", "Nursery (MA)", "Nursery (NJ)", "Rowley", "Rowley (GRH)", "Rumney", "Rumney (GRH)"))+
-  scale_fill_manual(values=c("paleturquoise3","gold3", "thistle3", "thistle2", "thistle", "paleturquoise2","gold2", "paleturquoise","gold"))+
+  scale_fill_manual(values=c("paleturquoise","gold", "thistle2", "thistle4", "thistle3", "paleturquoise3","gold3", "paleturquoise4","gold4"))+
   ylab("Heterozygosity Estimate")+
   ggtitle("(B) S. patens")
 
@@ -114,25 +114,103 @@ grid.arrange(A, B, nrow=1)
 mean(sppa_het$hetero_est)
 mean(sppa_het$error_est)
 
-C<-ggplot(spal_het_names, aes(three, hetero_est, fill=three, group=three))+
-  geom_boxplot(show.legend=F)+
-  theme_minimal()+
-  xlab("Site")+
-  ylim(0,0.01)+
-  scale_fill_manual(values=c("paleturquoise3", "gold3", "thistle3"))+
-  ylab("Heterozygosity Estimate")+
-  ggtitle("(A) S. alterniflora")
+#### BY THREES
 
-D<-ggplot(sppa_het_names, aes(three, hetero_est, fill=three, group=three))+
-  geom_boxplot(show.legend=F)+
-  theme_minimal()+
-  xlab("Site")+
-  scale_fill_manual(values=c("paleturquoise3", "gold3", "thistle3"))+
-  ylim(0,0.01)+
-  ylab("Heterozygosity Estimate")+
-  ggtitle("(B) S. patens")
+# Order the three groups
+spal_het_names$three <- factor(spal_het_names$three,
+                                levels = c("Nursery", "Local", "Greenhouse"))
+
+# Order the three groups
+sppa_het_names$three <- factor(sppa_het_names$three,
+                                     levels = c("Nursery", "Local", "Greenhouse"))
+
+
+## For the stats
+
+## do the stats Tukey HSD post-hoc test
+aov_fit <- aov(hetero_est ~ three, data = spal_het_names)
+tukey   <- TukeyHSD(aov_fit)$three
+
+
+# Define comparisons explicitly in factor level order (level1, level2)
+comps <- list(
+  c("Local", "Nursery"),
+  c("Local", "Greenhouse"),
+  c("Nursery", "Greenhouse")
+)
+
+
+# Look up p-values by trying both name orderings
+get_p <- function(a, b, tukey) {
+  nm <- rownames(tukey)
+  key <- if (paste0(b, "-", a) %in% nm) paste0(b, "-", a) else paste0(a, "-", b)
+  tukey[key, "p adj"]
+}
+
+p_vals <- sapply(comps, function(x) get_p(x[1], x[2], tukey))
+p_labels <- sapply(p_vals, function(p) {
+  if (p == 0)    "p < 2.2e-16"
+  else if (p < 0.001) paste0("p = ", formatC(p, format = "e", digits = 2))
+  else paste0("p = ", round(p, 3))
+})
+
+#Tukey HSD post-hoc test
+aov_fit_sppa <- aov(hetero_est~ three, data = sppa_het_names)
+tukey_sppa   <- TukeyHSD(aov_fit_sppa)$three
+
+
+# Look up p-values by trying both name orderings
+get_p_sppa <- function(a, b, tukey_sppa) {
+  nm_sppa <- rownames(tukey_sppa)
+  key_sppa <- if (paste0(b, "-", a) %in% nm_sppa) paste0(b, "-", a) else paste0(a, "-", b)
+  tukey_sppa[key_sppa, "p adj"]
+}
+
+p_vals_sppa <- sapply(comps, function(x) get_p(x[1], x[2], tukey_sppa))
+p_labels_sppa <- sapply(p_vals_sppa, function(p) {
+  if (p == 0)    "p < 2.2e-16"
+  else if (p < 0.001) paste0("p = ", formatC(p, format = "e", digits = 2))
+  else paste0("p = ", round(p, 3))
+})
+
+library(ggsignif)
+
+C<-ggplot(spal_het_names, aes(x = three, y = hetero_est, fill = three)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = 21,
+               outlier.fill = "white", outlier.color = "gray40") +
+  scale_fill_manual(values = c("Local"      = "paleturquoise3",
+                               "Nursery"    = "thistle3",
+                               "Greenhouse" = "gold3")) +
+  geom_signif(comparisons  = comps,
+              annotations  = p_labels,
+              step_increase = 0.12,
+              tip_length   = 0.01,
+              textsize     = 3) +
+  ylim(0, 0.012) +
+  labs(x = "Site", y = "Heterozygosity estimate", title = "(A) S. alterniflora") +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "italic"))
+
+
+D<-ggplot(sppa_het_names, aes(x = three, y = hetero_est, fill = three)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = 21,
+               outlier.fill = "white", outlier.color = "gray40") +
+  scale_fill_manual(values = c("Local"      = "paleturquoise3",
+                               "Nursery"    = "thistle3",
+                               "Greenhouse" = "gold3")) +
+  geom_signif(comparisons  = comps,
+              annotations  = p_labels_sppa,
+              step_increase = 0.12,
+              tip_length   = 0.01,
+              textsize     = 3) +
+  ylim(0, 0.012) +
+  labs(x = "Site", y = "Heterozygosity estimate", title = "(B) S. patens") +
+  theme_minimal() +
+  theme(plot.title = element_text(face = "italic"))
 
 grid.arrange(C, D, nrow=1)
+
+
 
 ## significance tests
 
