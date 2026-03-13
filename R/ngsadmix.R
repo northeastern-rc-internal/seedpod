@@ -3,7 +3,7 @@
 library(pophelper)
 
 # Get ID and pop info for each individual
-names_full<-read.table("/projects/seedpod/rawdata/bam_lists/spal/decloned_full_list", sep="/")
+names_full<-read.table("../data/spal_pca/decloned_full_list", sep="/")
 full_meta<-as.data.frame(do.call(rbind, strsplit(names_full$V7, "_")))
 pop_full<-cbind(full_meta[,c(2,3,4)])
 pop_full$a<-seq(0:321)
@@ -21,24 +21,13 @@ pop<-merge(names, pop_full)
 #sort pop
 pop_o<-pop[order(pop$a),]
 
-# Read inferred admixture proportions file
-q<-read.table("/projects/seedpod/output/ngsadmix_SC/spal/LD_filt_full_admix_1.qopt")
-
 # Plot them (ordered by population)
 ord = order(pop_o$a)
-par(mar=c(7,4,1,1))
-barplot(t(q)[,ord], space=0,border=NA,xlab="Individuals",ylab="Demo2 Admixture proportions for K=3", las=2)
-text(tapply(1:nrow(pop),pop[ord,"names"],mean),-0.05,unique(pop[ord,"names"]),xpd=T, srt = 60, adj = 1, cex=0.75)
 
-
-#make pretty with pophelper
-library(pophelper)
 
 # get files in the correct format
 
-q<-readQ("/projects/seedpod/output/ngsadmix_SC/spal/filt_full_admix_5.qopt")
-
-sfiles <- list.files(path="/projects/seedpod/output/ngsadmix_SC/spal/", pattern="*.qopt", full.names=T)
+sfiles <- list.files(path="../data/spal_ngsadmix_data/", pattern="*.qopt", full.names=T)
 slist <- readQ(files=sfiles,indlabfromfile=T)
 
 
@@ -62,7 +51,7 @@ plot(p1$plot[[1]])
 
 #### for SPPA
 # Get ID and pop info for each individual
-names_full<-read.table("/projects/seedpod/rawdata/bam_lists/sppa/filt_full_list", sep="/")
+names_full<-read.table("../data/sppa_pca/filt_full_list", sep="/")
 full_meta<-as.data.frame(do.call(rbind, strsplit(names_full$V7, "_")))
 pop_full<-cbind(full_meta[,c(2,3,4)])
 pop_full$a<-seq(0:349)
@@ -83,25 +72,15 @@ pop<-merge(pop_full, names)
 #sort pop
 pop_o<-pop[order(pop$a),]
 
-# Read inferred admixture proportions file
-q<-read.table("/projects/seedpod/output/ngsadmix_SC/sppa/LD_filt_full_admix_3.qopt")
-
-
 # Plot them (ordered by population)
 ord = order(pop$names)
-par(mar=c(7,4,1,1))
-#barplot(t(q)[,ord], space=0,border=NA,xlab="Individuals",ylab="Demo2 Admixture proportions for K=3", las=2)
-#ext(tapply(1:nrow(pop),pop[ord,"names"],mean),-0.05,unique(pop[ord,"names"]),xpd=T, srt = 60, adj = 1, cex=0.75)
-
 
 #make pretty with pophelper
 library(pophelper)
 
 # get files in the correct format
 
-q<-readQ("/projects/seedpod/output/ngsadmix_SC/sppa/LD_filt_full_admix_3.qopt")
-
-sfiles <- list.files(path="/projects/seedpod/output/ngsadmix_SC/sppa/", pattern="*.qopt", full.names=T)
+sfiles <- list.files(path="../data/sppa_ngsadmix_data/", pattern="*.qopt", full.names=T)
 slist <- readQ(files=sfiles,indlabfromfile=T)
 
 
