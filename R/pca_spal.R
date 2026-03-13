@@ -1,18 +1,18 @@
 ##PCAs
 
 #read in the data
-#cov_full<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/"))
-cov_full<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/LD_decloned_full.cov"))
+cov_full<-as.matrix(read.table("../data/spal_pca/LD_decloned_full.cov"))
 e_full<-eigen(cov_full)
 plot(e_full$vectors[,1:2])
 e_full$values/sum(e_full$values)
 
-names_full<-read.table("/projects/seedpod/rawdata/bam_lists/spal/decloned_full_list", sep="/")
+names_full<-read.table("../data/spal_pca/decloned_full_list", sep="/")
 
 full_meta<-as.data.frame(do.call(rbind, strsplit(names_full$V7, "_")))
 sites_full<-cbind(full_meta[,c(3,4)])
+#could have done this first
 
-plot(e_full$vectors[,1:2], group=as.factor(sites_full$V3):as.factor(sites_full$V4), col=rainbow(15), pch=19)
+sites_full$sites<-paste(sites_full$V3, sites_full$V4, sep="_" )
 
 ######### make colors consistent   ########
 
@@ -27,13 +27,8 @@ sites_full$colors<-ifelse(sites_full$V3 == "GRH" & sites_full$V4 == "PIS", "gold
                                                                     ifelse(sites_full$V3 == "ROW" , "paleturquoise3",
                                                                            ifelse(sites_full$V3 == "RUM" , "paleturquoise4", "na")))))))))
 
-#could have done this first
 
-sites_full$sites<-paste(sites_full$V3, sites_full$V4, sep="_" )
 
-# test it
-
-plot(e_full$vectors[,1:2], col=sites_full$colors, pch=19, xlab="PC1 (5.1%)", ylab="PC2 (4.4%)")
 
 ## add in pch to sites_full
 sites_full$pchers<-ifelse(sites_full$V3 == "RUM", 21, ifelse(sites_full$V3 == "ROW", 22, ifelse(sites_full$V3 == "BEL", 23, 
@@ -44,12 +39,12 @@ plot(e_full$vectors[,1:2], col=sites_full$colors, pch=sites_full$pchers, xlab="P
 
 ###########
 #for source sites
-cov_s<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/LD_filt_source.cov"))
+cov_s<-as.matrix(read.table("../data/spal_pca/LD_filt_source.cov"))
 e_s<-eigen(cov_s)
 plot(e_s$vectors[,1:2])
 e_s$values/sum(e_s$values)
 
-names_s<-read.table("/projects/seedpod/rawdata/bam_lists/spal/filt_source_list", sep="/")
+names_s<-read.table("../data/spal_pca/filt_source_list", sep="/")
 
 s_meta<-as.data.frame(do.call(rbind, strsplit(names_s$V7, "_")))
 sites_s<-cbind(s_meta[,c(3,4)])
@@ -66,12 +61,12 @@ plot(e_s$vectors[,1:2], col=sites_s$colors, pch=sites_s$pchers)
 
 #for greenhouse
 
-cov_g<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/LD_filt_grh.cov"))
+cov_g<-as.matrix(read.table("../data/spal_pca/LD_filt_grh.cov"))
 e_g<-eigen(cov_g)
 plot(e_g$vectors[,1:2])
 e_g$values/sum(e_g$values)
 
-names_g<-read.table("/projects/seedpod/rawdata/bam_lists/spal/filt_grh_list", sep="/")
+names_g<-read.table("../data/spal_pca/filt_grh_list", sep="/")
 
 g_meta<-as.data.frame(do.call(rbind, strsplit(names_g$V7, "_")))
 sites_g<-cbind(g_meta[,c(3,4)])
@@ -88,12 +83,12 @@ plot(e_g$vectors[,1:2], col=sites_g$colors, pch=sites_g$pchers)
 
 #for nursery
 
-cov_n<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/LD_filt_nur.cov"))
+cov_n<-as.matrix(read.table("../data/spal_pca/LD_filt_nur.cov"))
 e_n<-eigen(cov_n)
 plot(e_n$vectors[,1:2])
 e_n$values/sum(e_n$values)
 
-names_n<-read.table("/projects/seedpod/rawdata/bam_lists/spal/filt_nur_list", sep="/")
+names_n<-read.table("../data/spal_pca/filt_nur_list", sep="/")
 
 
 n_meta<-as.data.frame(do.call(rbind, strsplit(names_n$V7, "_")))
@@ -109,12 +104,12 @@ plot(e_n$vectors[,1:2], col=sites_n$colors, pch=24)
 
 ### plot of greenhouse + source
 
-cov_g_s<-as.matrix(read.table("/projects/seedpod/output/pcangsd_SC/spal/LD_filt_source_grh.cov"))
+cov_g_s<-as.matrix(read.table("../data/spal_pca/LD_filt_source_grh.cov"))
 e_g_s<-eigen(cov_g_s)
 plot(e_g_s$vectors[,1:2])
 e_g_s$values/sum(e_g_s$values)
 
-names_g_s<-read.table("/projects/seedpod/rawdata/bam_lists/spal/filt_source_grh_list", sep="/")
+names_g_s<-read.table("../data/spal_pca/filt_source_grh_list", sep="/")
 
 
 g_s_meta<-as.data.frame(do.call(rbind, strsplit(names_g_s$V7, "_")))

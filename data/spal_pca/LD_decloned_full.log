@@ -1,5 +1,5 @@
 PCAngsd v1.36.4
-Time: 03/03/2026 13:09:39
+Time: 13/03/2026 10:58:49
 Directory: /projects/seedpod/sbatch
 Options:
 	--beagle /projects/seedpod/output/angsd_spal_SC//LD_decloned_full_list.beagle.gz
@@ -7,11 +7,11 @@ Options:
 	--out /projects/seedpod/output/pcangsd_SC/spal//LD_decloned_full
 	--pcadapt
 
-Loaded 7008 sites and 318 samples.
-Number of sites after MAF filtering (0.05): 7008
+Loaded 7063 sites and 322 samples.
+Number of sites after MAF filtering (0.05): 7061
 
-PCAngsd converged in 36 iterations using 15 eigenvectors.
+PCAngsd converged in 25 iterations using 15 eigenvectors.
 Saved covariance matrix as /projects/seedpod/output/pcangsd_SC/spal//LD_decloned_full.cov
 Saved z-scores as /projects/seedpod/output/pcangsd_SC/spal//LD_decloned_full.pcadapt.zscores
 
-Total elapsed time: 0m8s
+Total elapsed time: 0m14s

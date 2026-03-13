@@ -289,7 +289,7 @@ C<-ggplot(df_same_site, aes(x = threes_a, y = rab, fill = threes_a)) +
               annotations  = p_labels,
               step_increase = 0.12,
               tip_length   = 0.01,
-              textsize     = 3) +
+              textsize     = 4) +
   ylim(0, 1.35) +
   labs(x = "Site", y = "Pairwise Relatedness", title = "(A) S. alterniflora") +
   theme_minimal() +
@@ -306,7 +306,7 @@ D<-ggplot(df_same_site_sppa, aes(x = threes_a, y = rab, fill = threes_a)) +
               annotations  = p_labels_sppa,
               step_increase = 0.12,
               tip_length   = 0.01,
-              textsize     = 3) +
+              textsize     = 4) +
   ylim(0, 1.35) +
   labs(x = "Site", y = "Pairwise Relatedness", title = "(B) S. patens") +
   theme_minimal() +

@@ -185,7 +185,7 @@ C<-ggplot(spal_het_names, aes(x = three, y = hetero_est, fill = three)) +
               annotations  = p_labels,
               step_increase = 0.12,
               tip_length   = 0.01,
-              textsize     = 3) +
+              textsize     = 4) +
   ylim(0, 0.012) +
   labs(x = "Site", y = "Heterozygosity estimate", title = "(A) S. alterniflora") +
   theme_minimal() +
@@ -202,7 +202,7 @@ D<-ggplot(sppa_het_names, aes(x = three, y = hetero_est, fill = three)) +
               annotations  = p_labels_sppa,
               step_increase = 0.12,
               tip_length   = 0.01,
-              textsize     = 3) +
+              textsize     = 4) +
   ylim(0, 0.012) +
   labs(x = "Site", y = "Heterozygosity estimate", title = "(B) S. patens") +
   theme_minimal() +
