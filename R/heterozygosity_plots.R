@@ -11,8 +11,8 @@
 
 #tail -n 392 sppa_ipyrad/sppa_outfiles/sppa_stats.txt | head -n 387 > het_ipyrad/sppa_het_table.txt
 
-spal_het<-read.table("/projects/seedpod/output/het_ipyrad/keep_spal_het_table.txt", header=T)
-sppa_het<-read.table("/projects/seedpod/output/het_ipyrad/keep_sppa_het_table.txt", header=T)
+spal_het<-read.table("../data/keep_spal_het_table.txt", header=T)
+sppa_het<-read.table("../data/keep_sppa_het_table.txt", header=T)
 
 spal_meta<-as.data.frame(do.call(rbind, strsplit(spal_het$name, "_")))
 sites_spal<-cbind(spal_meta[,c(2,3,4)])
