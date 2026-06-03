@@ -15,9 +15,11 @@ We built a bioinformatics container image which includes the following software:
 * bcftools
 * ngsrelate
 * FEEMS
+* ngsLD
+* prune_graph
 
 The image is available for use at: containers.rc.northeastern.edu/seedpod/seedpod:rstudio
 
 It can be pulled down to an HPC system with the following command:
 
-apptainer pull --docker-login docker://containers.rc.northeastern.edu/seedpod/seedpod:rstudio
+apptainer pull --docker-login docker://containers.rc.northeastern.edu/seedpod/seedpod:latest
