@@ -344,3 +344,24 @@ clones_spal[,1:6]
 
 clones_sppa<-df_labeled_sppa[df_labeled_sppa$rab >= 0.94,]
 clones_sppa[,1:6]
+
+
+### get stats for table
+
+library(dplyr)
+summary_stats <- df_labeled %>%
+  group_by(sites_a) %>%
+  summarise(
+    mean_mpg = mean(rab),
+    sd_mpg = sd(rab),
+  )
+print(summary_stats)
+
+library(dplyr)
+summary_stats <- df_labeled_sppa %>%
+  group_by(sites_a) %>%
+  summarise(
+    mean_mpg = mean(rab),
+    sd_mpg = sd(rab),
+  )
+print(summary_stats)

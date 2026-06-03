@@ -321,3 +321,23 @@ library(rlang)
 library(jtools)
 
 
+
+### get stats for table
+
+library(dplyr)
+summary_stats <- no_clones %>%
+  group_by(names) %>%
+  summarise(
+    mean_mpg = mean(hetero_est),
+    sd_mpg = sd(hetero_est),
+  )
+print(summary_stats)
+
+library(dplyr)
+summary_stats <- sppa_het_names %>%
+  group_by(names) %>%
+  summarise(
+    mean_mpg = mean(hetero_est),
+    sd_mpg = sd(hetero_est),
+  )
+print(summary_stats)
