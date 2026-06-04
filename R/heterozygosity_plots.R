@@ -11,8 +11,28 @@
 
 #tail -n 392 sppa_ipyrad/sppa_outfiles/sppa_stats.txt | head -n 387 > het_ipyrad/sppa_het_table.txt
 
-spal_het<-read.table("../data/keep_spal_het_table.txt", header=T)
-sppa_het<-read.table("../data/keep_sppa_het_table.txt", header=T)
+# Read the het output file
+het_data_spal <- read.table("/projects/seedpod/seedpod/data/het_by_indiv/het_erik_filt_spal.het", header=TRUE)
+het_data_sppa <- read.table("/projects/seedpod/seedpod/data/het_by_indiv/het_erik_filt_sppa.het", header=TRUE)
+
+
+# Calculate Observed Heterozygous Sites
+het_data_spal$O_HET <- het_data_spal$N_SITES - het_data_spal$O.HOM.
+het_data_sppa$O_HET <- het_data_sppa$N_SITES - het_data_sppa$O.HOM.
+
+
+# Calculate Individual Heterozygosity Proportion
+het_data_spal$INDV_HET_PROPORTION <- het_data_spal$O_HET / het_data_spal$N_SITES
+het_data_sppa$INDV_HET_PROPORTION <- het_data_sppa$O_HET / het_data_sppa$N_SITES
+
+
+# View the results
+head(het_data_spal)
+head(het_data_sppa)
+
+
+spal_het<-read.table("../data/het_by_indiv/keep_spal_het_table.txt", header=T)
+sppa_het<-read.table("../data/het_by_indiv/keep_sppa_het_table.txt", header=T)
 
 spal_meta<-as.data.frame(do.call(rbind, strsplit(spal_het$name, "_")))
 sites_spal<-cbind(spal_meta[,c(2,3,4)])
@@ -25,11 +45,12 @@ sppa_het$sites<-paste(sites_sppa$V3, sites_sppa$V4, sep="_")
 sppa_het$site_simple<-sppa_meta$V3
 
 #hist(spal_het$O.HOM./(spal_het$N_SITES+spal_het$E.HOM.))
-hist(sppa_het$hetero_est)
+hist(het_data_spal$INDV_HET_PROPORTION)
 
-mean(spal_het$hetero_est)
-mean(spal_het$error_est)
-
+mean(het_data_spal$INDV_HET_PROPORTION)
+# [1] 0.197558
+mean(het_data_sppa$INDV_HET_PROPORTION)
+# [1] 0.08891974
 
 
 # make plots
@@ -42,8 +63,12 @@ sppa_het$three<-replace( sppa_het$three, sppa_het$three=="RUM","Local")
 sppa_het$three<-replace( sppa_het$three, sppa_het$three=="NUR","Nursery")
 sppa_het$three<-replace( sppa_het$three, sppa_het$three=="GRH","Greenhouse")
 
+colnames(het_data_sppa)<-c("name","O.HOM.","E.HOM.","N_SITES","F","O_HET","INDV_HET_PROPORTION")
 
-ggplot(sppa_het, aes(three, hetero_est, fill=three, group=three))+
+sppa_het_new<-merge(sppa_het, het_data_sppa, by="name")
+
+
+ggplot(sppa_het_new, aes(three, INDV_HET_PROPORTION, fill=three, group=three))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   xlab("Site")+
@@ -59,8 +84,12 @@ spal_het$three<-replace( spal_het$three, spal_het$three=="RUM","Local")
 spal_het$three<-replace( spal_het$three, spal_het$three=="NUR","Nursery")
 spal_het$three<-replace( spal_het$three, spal_het$three=="GRH","Greenhouse")
 
+colnames(het_data_spal)<-c("name","O.HOM.","E.HOM.","N_SITES","F","O_HET","INDV_HET_PROPORTION")
 
-ggplot(spal_het, aes(three, hetero_est, fill=three, group=three))+
+spal_het_new<-merge(spal_het, het_data_spal, by="name")
+
+
+ggplot(spal_het_new, aes(three, INDV_HET_PROPORTION, fill=three, group=three))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   xlab("Site")+
@@ -77,12 +106,12 @@ colnames(names)<-c("sites", "names", "colors")
 
 #fix up name order
 
-sppa_het$three <- factor(sppa_het$three, levels=c("Local", "Greenhouse", "Nursery"))
-spal_het$three <- factor(spal_het$three, levels=c("Local", "Greenhouse", "Nursery"))
+sppa_het_new$three <- factor(sppa_het$three, levels=c("Local", "Greenhouse", "Nursery"))
+spal_het_new$three <- factor(spal_het$three, levels=c("Local", "Greenhouse", "Nursery"))
 
-spal_het_names<-merge(names, spal_het)
+spal_het_names_new<-merge(names, spal_het_new)
 
-A<-ggplot(spal_het_names, aes(names, hetero_est, fill=names, group=names))+
+A<-ggplot(spal_het_names_new, aes(names, INDV_HET_PROPORTION, fill=names, group=names))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   scale_x_discrete(name="Site", labels=c("Belle Isle", "Bell Isle (GRH)", "Nursery (MD)", "Nursery (MA)", "Nursery (NJ)", "Rowley", "Rowley (GRH)", "Rumney", "Rumney (GRH)"))+
@@ -95,9 +124,9 @@ names2<-cbind(c(unique(sppa_het$sites)), c("Rumney", "Rumney", "Rowley","Rowley"
 
 colnames(names2)<-c("sites", "names", "colors")
 
-sppa_het_names<-merge(names2, sppa_het)
+sppa_het_names_new<-merge(names2, sppa_het_new)
 
-B<-ggplot(sppa_het_names, aes(names, hetero_est, fill=names, group=names))+
+B<-ggplot(sppa_het_names_new, aes(names, INDV_HET_PROPORTION, fill=names, group=names))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   scale_x_discrete(name="Site", labels=c("Belle Isle", "Bell Isle (GRH)", "Nursery (MD)", "Nursery (MA)", "Nursery (NJ)", "Rowley", "Rowley (GRH)", "Rumney", "Rumney (GRH)"))+
@@ -117,18 +146,18 @@ mean(sppa_het$error_est)
 #### BY THREES
 
 # Order the three groups
-spal_het_names$three <- factor(spal_het_names$three,
+spal_het_names_new$three <- factor(spal_het_names_new$three,
                                 levels = c("Nursery", "Local", "Greenhouse"))
 
 # Order the three groups
-sppa_het_names$three <- factor(sppa_het_names$three,
+sppa_het_names_new$three <- factor(sppa_het_names_new$three,
                                      levels = c("Nursery", "Local", "Greenhouse"))
 
 
 ## For the stats
 
 ## do the stats Tukey HSD post-hoc test
-aov_fit <- aov(hetero_est ~ three, data = spal_het_names)
+aov_fit <- aov(INDV_HET_PROPORTION ~ three, data = spal_het_names_new)
 tukey   <- TukeyHSD(aov_fit)$three
 
 
@@ -155,7 +184,7 @@ p_labels <- sapply(p_vals, function(p) {
 })
 
 #Tukey HSD post-hoc test
-aov_fit_sppa <- aov(hetero_est~ three, data = sppa_het_names)
+aov_fit_sppa <- aov(INDV_HET_PROPORTION~ three, data = sppa_het_names_new)
 tukey_sppa   <- TukeyHSD(aov_fit_sppa)$three
 
 
@@ -175,7 +204,7 @@ p_labels_sppa <- sapply(p_vals_sppa, function(p) {
 
 library(ggsignif)
 
-C<-ggplot(spal_het_names, aes(x = three, y = hetero_est, fill = three)) +
+C<-ggplot(spal_het_names_new, aes(x = three, y = INDV_HET_PROPORTION, fill = three)) +
   geom_boxplot(show.legend = FALSE, outlier.shape = 21,
                outlier.fill = "white", outlier.color = "gray40") +
   scale_fill_manual(values = c("Local"      = "paleturquoise3",
@@ -186,13 +215,13 @@ C<-ggplot(spal_het_names, aes(x = three, y = hetero_est, fill = three)) +
               step_increase = 0.12,
               tip_length   = 0.01,
               textsize     = 4) +
-  ylim(0, 0.012) +
+  ylim(0, 1.2) +
   labs(x = "Site", y = "Heterozygosity estimate", title = "(A) S. alterniflora") +
   theme_minimal() +
   theme(plot.title = element_text(face = "italic"))
 
 
-D<-ggplot(sppa_het_names, aes(x = three, y = hetero_est, fill = three)) +
+D<-ggplot(sppa_het_names_new, aes(x = three, y = INDV_HET_PROPORTION, fill = three)) +
   geom_boxplot(show.legend = FALSE, outlier.shape = 21,
                outlier.fill = "white", outlier.color = "gray40") +
   scale_fill_manual(values = c("Local"      = "paleturquoise3",
@@ -203,7 +232,7 @@ D<-ggplot(sppa_het_names, aes(x = three, y = hetero_est, fill = three)) +
               step_increase = 0.12,
               tip_length   = 0.01,
               textsize     = 4) +
-  ylim(0, 0.012) +
+  ylim(0, 1.2) +
   labs(x = "Site", y = "Heterozygosity estimate", title = "(B) S. patens") +
   theme_minimal() +
   theme(plot.title = element_text(face = "italic"))
@@ -214,21 +243,21 @@ grid.arrange(C, D, nrow=1)
 
 ## significance tests
 
-sig_3_sa<-aov(spal_het_names$hetero_est~spal_het_names$three)
+sig_3_sa<-aov(spal_het_names_new$INDV_HET_PROPORTION~spal_het_names_new$three)
 summary(sig_3_sa)
 TukeyHSD(sig_3_sa, conf.level = .95, las=2)
 
-sig_3_sp<-aov(sppa_het_names$hetero_est~sppa_het_names$three)
+sig_3_sp<-aov(sppa_het_names_new$INDV_HET_PROPORTION~sppa_het_names_new$three)
 summary(sig_3_sp)
 TukeyHSD(sig_3_sp, conf.level = .95, las=2)
 
 # for 9 groups
 
-sig_9_sa<-aov(spal_het_names$hetero_est~spal_het_names$names)
+sig_9_sa<-aov(spal_het_names_new$INDV_HET_PROPORTION~spal_het_names_new$names)
 summary(sig_9_sa)
 TukeyHSD(sig_9_sa, conf.level = .95, las=2)
 
-sig_9_sp<-aov(sppa_het_names$hetero_est~sppa_het_names$names)
+sig_9_sp<-aov(sppa_het_names_new$INDV_HET_PROPORTION~sppa_het_names_new$names)
 summary(sig_9_sp)
 TukeyHSD(sig_9_sp, conf.level = .95, las=2)
 
@@ -259,28 +288,28 @@ remove_pattern <- function(input_string) {
 # Example usage
 
 # Apply the function and store results in a new column
-spal_het_names$processed_name <- sapply(spal_het_names$name, remove_pattern)
+spal_het_names_new$processed_name <- sapply(spal_het_names_new$names, remove_pattern)
 
 # Print before and after for verification
-for (i in 1:nrow(spal_het_names)) {
-  cat("Original:", spal_het_names$name[i], "→ Result:", spal_het_names$processed_name[i], "\n")
+for (i in 1:nrow(spal_het_names_new)) {
+  cat("Original:", spal_het_names_new$names[i], "→ Result:", spal_het_names_new$processed_name[i], "\n")
 }
 
 # do for sppa also just to make metadata match
 # Apply the function and store results in a new columnmet
-sppa_het_names$processed_name <- sapply(sppa_het_names$name, remove_pattern)
+sppa_het_names_new$processed_name <- sapply(sppa_het_names_new$names, remove_pattern)
 
 # Print before and after for verification
-for (i in 1:nrow(sppa_het_names)) {
-  cat("Original:", sppa_het_names$name[i], "→ Result:", sppa_het_names$processed_name[i], "\n")
+for (i in 1:nrow(sppa_het_names_new)) {
+  cat("Original:", sppa_het_names_new$names[i], "→ Result:", sppa_het_names_new$processed_name[i], "\n")
 }
 
 
-no_clones<-spal_het_names[!spal_het_names$processed_name %in% remove,]
+no_clones<-spal_het_names_new[!spal_het_names_new$processed_name %in% remove,]
 
 #plot of threes
 
-Cnoclones<-ggplot(no_clones, aes(three, hetero_est, fill=three, group=three))+
+Cnoclones<-ggplot(no_clones, aes(three, INDV_HET_PROPORTION, fill=three, group=three))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   xlab("Site")+
@@ -293,11 +322,11 @@ grid.arrange(Cnoclones, D, nrow=1)
 
 #plot of 9s
 
-Anoclones<-ggplot(no_clones, aes(names, hetero_est, fill=names, group=names))+
+Anoclones<-ggplot(no_clones, aes(names, INDV_HET_PROPORTION, fill=names, group=names))+
   geom_boxplot(show.legend=F)+
   theme_minimal()+
   scale_x_discrete(name="Site", labels=c("Belle Isle", "Bell Isle (GRH)", "Nursery (MD)", "Nursery (MA)", "Nursery (NJ)", "Rowley", "Rowley (GRH)", "Rumney", "Rumney (GRH)"))+
-  scale_fill_manual(values=c("paleturquoise3","gold3", "thistle3", "thistle2", "thistle", "paleturquoise2","gold2", "paleturquoise","gold"))+
+  scale_fill_manual(values=c("paleturquoise","gold", "thistle2", "thistle4", "thistle3", "paleturquoise3","gold3", "paleturquoise4","gold4"))+
   ylab("Heterozygosity Estimate")+
   ggtitle("(A) S. alterniflora")
 
@@ -306,13 +335,13 @@ grid.arrange(Anoclones, B, nrow=1)
 
 ## significance tests
 
-sig_3_sa_nc<-aov(no_clones$hetero_est~no_clones$three)
+sig_3_sa_nc<-aov(no_clones$INDV_HET_PROPORTION~no_clones$three)
 summary(sig_3_sa_nc)
 TukeyHSD(sig_3_sa_nc, conf.level = .95, las=2)
 
 # for 9 groups
 
-sig_9_sa_nc<-aov(no_clones$hetero_est~no_clones$names)
+sig_9_sa_nc<-aov(no_clones$INDV_HET_PROPORTION~no_clones$names)
 summary(sig_9_sa_nc)
 TukeyHSD(sig_9_sa_nc, conf.level = .95, las=2)
 
@@ -328,16 +357,16 @@ library(dplyr)
 summary_stats <- no_clones %>%
   group_by(names) %>%
   summarise(
-    mean_mpg = mean(hetero_est),
-    sd_mpg = sd(hetero_est),
+    mean_mpg = mean(INDV_HET_PROPORTION),
+    sd_mpg = sd(INDV_HET_PROPORTION),
   )
 print(summary_stats)
 
 library(dplyr)
-summary_stats <- sppa_het_names %>%
+summary_stats <- sppa_het_names_new %>%
   group_by(names) %>%
   summarise(
-    mean_mpg = mean(hetero_est),
-    sd_mpg = sd(hetero_est),
+    mean_mpg = mean(INDV_HET_PROPORTION),
+    sd_mpg = sd(INDV_HET_PROPORTION),
   )
 print(summary_stats)
