@@ -3,11 +3,32 @@ library(vcfR)
 library(pheatmap)
 
 #use vcfr to create a genid object for each species
-spal_vcf<-read.vcfR("/projects/seedpod/output/LD_vcf/spal/LD_filt_full.recode.vcf")
+spal_vcf<-read.vcfR("/projects/seedpod/output/LD_vcf/spal/filtered_erik.vcf.gz")
 spal_genid<-extract.gt(spal_vcf, as.numeric = TRUE)
 
 
 meta_spal<-read.table("/projects/seedpod/rawdata/metadata/spal/decloned_spal.csv", sep=",", head=F)
+
+
+# After loading both files, find the overlap
+vcf_samples <- colnames(spal_genid)
+meta_samples <- meta_spal$V2  # assuming V1 holds the sample IDs
+
+# Check what you're working with
+cat("VCF samples:", length(vcf_samples), "\n")
+cat("Meta samples:", nrow(meta_spal), "\n")
+cat("Shared samples:", length(intersect(vcf_samples, meta_samples)), "\n")
+cat("In VCF but not meta:", length(setdiff(vcf_samples, meta_samples)), "\n")
+cat("In meta but not VCF:", length(setdiff(meta_samples, vcf_samples)), "\n")
+
+# Keep only shared samples
+shared <- intersect(vcf_samples, meta_samples)
+spal_genid_filt <- spal_genid[, shared]
+meta_spal_filt  <- meta_spal[meta_spal$V2 %in% shared, ]
+
+# Reorder meta to match VCF column order
+meta_spal_filt <- meta_spal_filt[match(shared, meta_spal_filt$V2), ]
+
 
 # get metadata in 9 groups
 site_map <- c(
@@ -36,9 +57,9 @@ site_map <- c(
   BEL_KEY  = "Belle Isle"
 )
 
-meta_spal$nines <- site_map[meta_spal$V3]
+meta_spal_filt$nines <- site_map[meta_spal_filt$V3]
 
-spal_pops<-data.frame(meta_spal$nines, t(spal_genid), row.names = NULL)
+spal_pops<-data.frame(meta_spal_filt$nines, t(spal_genid_filt), row.names = NULL)
 
 # run test
 mat_spal<-pairwise.neifst(spal_pops[,-2], diploid=T)
@@ -72,16 +93,26 @@ pheatmap(data_matrix,
 
 
 #use vcfr to create a genid object for each species
-sppa_vcf<-read.vcfR("/projects/seedpod/output/LD_vcf/sppa/LD_filt_full.recode.vcf")
+sppa_vcf<-read.vcfR("/projects/seedpod/output/LD_vcf/sppa/filtered_erik.vcf.gz")
 sppa_genid<-extract.gt(sppa_vcf, as.numeric = TRUE)
 
 
 meta_sppa<-read.table("/projects/seedpod/rawdata/metadata/sppa/filt_metadata_sppa.csv", sep=",",head=F)
 
-# get metadata in 9 groups
-meta_sppa$nines <- site_map[meta_sppa$V3]
+vcf_samples_sppa <- colnames(sppa_genid)
+meta_samples_sppa <- meta_sppa$V2
 
-sppa_pops<-data.frame(meta_sppa$nines, t(sppa_genid), row.names = NULL)
+shared_sppa <- intersect(vcf_samples_sppa, meta_samples_sppa)
+sppa_genid_filt <- sppa_genid[, shared_sppa]
+meta_sppa_filt  <- meta_sppa[meta_sppa$V2 %in% shared_sppa, ]
+meta_sppa_filt  <- meta_sppa_filt[match(shared_sppa, meta_sppa_filt$V2), ]
+
+
+
+# get metadata in 9 groups
+meta_sppa_filt$nines <- site_map[meta_sppa_filt$V3]
+
+sppa_pops<-data.frame(meta_sppa_filt$nines, t(sppa_genid_filt), row.names = NULL)
 
 # fix nas 
 sppa_pops[is.na(sppa_pops)]<-0

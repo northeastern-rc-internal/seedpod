@@ -49,9 +49,12 @@ hist(het_data_spal$INDV_HET_PROPORTION)
 
 mean(het_data_spal$INDV_HET_PROPORTION)
 # [1] 0.197558
+sd(het_data_spal$INDV_HET_PROPORTION)
+# [1] 0.08517709
 mean(het_data_sppa$INDV_HET_PROPORTION)
 # [1] 0.08891974
-
+sd(het_data_sppa$INDV_HET_PROPORTION)
+# [1] 0.08523492
 
 # make plots
 library(rlang)
