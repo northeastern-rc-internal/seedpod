@@ -166,8 +166,15 @@ pch_s<-merge(the_def, sites_s)
 pch_g_s<-merge(the_def, sites_g_s)
 pch_g<-merge(the_def, sites_g)
 
-png("Figure5.png", width = 12, height = 8, units = "in", res = 600)
-layout.show(6)
+png("Figure5.png", width = 15, height = 10, units = "in", res = 600)
+
+layout.matrix<- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
+
+layout(mat = layout.matrix,
+       heights = c(4, 2), # Heights of the two rows
+       widths = c(4, 2, 2)) # Widths of the two columns
+
+#layout.show(6)
 
 plot(e_full$vectors[,1:2], bg=sites_full$colors, col="grey", pch=sites_full$pchers, xlab="PC1 (46.8%)", ylab="PC2 (1.5%)", main="(A) All", cex=2.5, pt.cex=1.5, cex.axis=1.5, cex.lab=1.5, cex.main=2)
 plot(e_n$vectors[,1:2], bg=sites_n$colors, col="grey", pch=24, xlab="PC1 (12.0%)", ylab="PC2 (3.4%)", main="(D) Nursery", cex=2.5, pt.cex=1.5,  cex.axis=1.5, cex.lab=1.5, cex.main=2)

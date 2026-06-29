@@ -168,7 +168,7 @@ layout(mat = layout.matrix,
        heights = c(4, 2), # Heights of the two rows
        widths = c(4, 2, 2)) # Widths of the two columns
 
-layout.show(6)
+#layout.show(6)
 
 plot(e_full$vectors[,1:2], bg=sites_full$colors, col="grey", pch=sites_full$pchers, xlab="PC1 (4.9%)", ylab="PC2 (4.3%)", main="(A) All", cex=2.5, cex.axis=1.5, cex.lab=1.5, cex.main=2)
 plot(e_n$vectors[,1:2], bg=sites_n$colors, col="grey", pch=24, xlab="PC1 (10.0%)", ylab="PC2 (4.2%)", main="(D) Nursery", cex=2.5,  cex.axis=1.5, cex.lab=1.5, cex.main=2)
