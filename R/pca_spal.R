@@ -162,7 +162,11 @@ pch_s<-merge(sites_s, the_def, sort=F)
 pch_g_s<-merge(sites_g_s, the_def, sort=F)
 pch_g<-merge(sites_g,the_def, sort=F)
                   
-png("Figure4.png", width = 6, height = 4, units = "in", res = 600)
+png("Figure4.png", width = 15, height = 10, units = "in", res = 600)
+layout(mat = layout.matrix,
+       heights = c(4, 2), # Heights of the two rows
+       widths = c(4, 2, 2)) # Widths of the two columns
+
 layout.show(6)
 
 plot(e_full$vectors[,1:2], bg=sites_full$colors, col="grey", pch=sites_full$pchers, xlab="PC1 (4.9%)", ylab="PC2 (4.3%)", main="(A) All", cex=2.5, cex.axis=1.5, cex.lab=1.5, cex.main=2)
