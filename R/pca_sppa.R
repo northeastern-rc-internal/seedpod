@@ -167,9 +167,7 @@ pch_g_s<-merge(the_def, sites_g_s)
 pch_g<-merge(the_def, sites_g)
 
 png("Figure5.png", width = 15, height = 10, units = "in", res = 600)
-
 layout.matrix<- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, ncol = 3)
-
 layout(mat = layout.matrix,
        heights = c(4, 2), # Heights of the two rows
        widths = c(4, 2, 2)) # Widths of the two columns
