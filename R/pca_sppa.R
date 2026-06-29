@@ -166,7 +166,7 @@ pch_s<-merge(the_def, sites_s)
 pch_g_s<-merge(the_def, sites_g_s)
 pch_g<-merge(the_def, sites_g)
 
-
+png("Figure5.png", width = 6, height = 4, units = "in", res = 600)
 layout.show(6)
 
 plot(e_full$vectors[,1:2], bg=sites_full$colors, col="grey", pch=sites_full$pchers, xlab="PC1 (46.8%)", ylab="PC2 (1.5%)", main="(A) All", cex=2.5, pt.cex=1.5, cex.axis=1.5, cex.lab=1.5, cex.main=2)
@@ -180,3 +180,4 @@ legend("center",
        pch=c(21, 22, 23, 21, 22, 23, 24,24,24),
        pt.bg=c("paleturquoise4", "paleturquoise3", "paleturquoise", "gold4", "gold3", "gold", "thistle3", "thistle2", "thistle4"),
        pt.cex=2, cex=1.5, bty='n')
+dev.off()

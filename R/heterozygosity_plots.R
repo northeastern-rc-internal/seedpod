@@ -240,9 +240,9 @@ D<-ggplot(sppa_het_names_new, aes(x = three, y = INDV_HET_PROPORTION, fill = thr
   theme_minimal() +
   theme(plot.title = element_text(face = "italic"))
 
-grid.arrange(C, D, nrow=1)
+p3<-grid.arrange(C, D, nrow=1)
 
-
+ggsave("Figure3.png", plot = p3, width = 6, height = 4, units = "in", dpi = 600)
 
 ## significance tests
 
@@ -322,6 +322,8 @@ Cnoclones<-ggplot(no_clones, aes(three, INDV_HET_PROPORTION, fill=three, group=t
   ggtitle("(A) S. alterniflora")
 
 grid.arrange(Cnoclones, D, nrow=1)
+
+
 
 #plot of 9s
 

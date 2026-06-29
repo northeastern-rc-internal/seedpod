@@ -312,7 +312,9 @@ D<-ggplot(df_same_site_sppa, aes(x = threes_a, y = rab, fill = threes_a)) +
   theme_minimal() +
   theme(plot.title = element_text(face = "italic"))
 
-grid.arrange(C, D, nrow=1)
+p<-grid.arrange(C, D, nrow=1)
+# Export at 600 DPI
+ggsave("Figure2.png", plot = p, width = 6, height = 4, units = "in", dpi = 600)
 
 #run the models
 
